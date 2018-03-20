@@ -1,15 +1,20 @@
 package com.serco.dias.dfm.download
 
-import com.serco.dias.streamsMaster.model.Center
+import com.serco.dias.dfm.config.Config
+import com.serco.dias.dfm.model.Center
+import com.serco.dias.dfm.model.Product
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.cloud.stream.messaging.Processor
 import org.springframework.cloud.stream.test.binder.MessageCollector
+import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.support.GenericMessage
 import org.springframework.test.context.junit4.SpringRunner
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @RunWith(SpringRunner::class)
@@ -17,23 +22,22 @@ import java.util.concurrent.TimeUnit
 class DownloadApplicationTests {
 
 	@Autowired
-	@Qualifier("list")
-	private lateinit var list: MessageChannel
-	@Autowired
-	@Qualifier("completed")
-	private lateinit var completed: MessageChannel
+	private lateinit var processor: Processor
+	@Autowired lateinit var config: Config
 
 	@Autowired
 	lateinit var messageCollector: MessageCollector
 
 	@Test @SuppressWarnings("unchecked")
 	fun testWiring() {
-		val message = GenericMessage(Center())
-		list.send(message)
-		val received = messageCollector.forChannel(completed).poll(2, TimeUnit.MINUTES)
-		println(received)
+		val message = GenericMessage(
+				Product("S3A_SR_2_LAN____20180320T064932_20180320T065931_20180320T090109_0599_029_120______SVL_O_NR_003",
+						Date(), config.center, null, null, mapOf("uuid" to "94457d61-7caa-4e98-bfe9-2c8cf74eb137")))
+		processor.input().send(message)
 
-//        val received = messageCollector.forChannel(download).poll() as Message<String>
-		assert(received != null)
+		val received = messageCollector.forChannel(processor.output()).poll(5, TimeUnit.MINUTES)
+
+		println(received)
 	}
+
 }

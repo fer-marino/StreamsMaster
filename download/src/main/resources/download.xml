@@ -3,28 +3,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:int="http://www.springframework.org/schema/integration"
        xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
-
-
-		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <task:executor id="downloader" pool-size="${streams-master.parallelDownloads:2}" rejection-policy="CALLER_RUNS" />
-
-    <int:logging-channel-adapter id="logger" logger-name="streams-master"/>
-    <int:logging-channel-adapter id="errorLogger" logger-name="Download-Errors" level="ERROR" expression="payload.cause.message" />
-
-    <bean id="redisMessageStore" class="org.springframework.integration.redis.store.RedisMessageStore">
-        <constructor-arg ref="redisConnectionFactory"/>
-        <property name="valueSerializer" ref="redisSerializer" />
-    </bean>
 
     <int:channel id="downloadQueue" datatype="com.serco.dias.dfm.model.Product">
         <int:dispatcher task-executor="downloader" />
     </int:channel>
 
-    <!-- Do some error handling -->
-    <int:transformer input-channel="errorChannel" output-channel="errorLogger" expression="payload.cause.message" />
+    <int:channel id="completed" />
 
     <int:chain input-channel="downloadError" output-channel="downloadQueue">
         <int:gateway request-channel="errorLogger" />
@@ -45,15 +32,7 @@
         </int:header-enricher>
 
         <int:service-activator expression="@generalRoutes.download(payload)" requires-reply="true" async="true"/>
-        <int:service-activator expression="@generalRoutes.finalize(payload)" />
-    </int:chain>
-
-    <int:chain id="listChain" input-channel="list" output-channel="downloadQueue">
-        <int:service-activator ref="generalRoutes" method="list" requires-reply="true" />
-        <int:splitter />
-        <int:filter expression="payload.name matches payload.downloadCenter.filter" />
-        <int:filter expression="@metadataStore.get(payload.name) == null" />
-        <int:service-activator ref="generalRoutes"  method="storeRedis" />
+        <int:service-activator expression="@generalRoutes.finalize(payload)" requires-reply="true" />
     </int:chain>
 
 </beans>

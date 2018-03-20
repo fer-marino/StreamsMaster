@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		kotlinVersion = '1.2.20'
+		kotlinVersion = '1.2.30'
 		springBootVersion = '2.0.0.RELEASE'
 	}
 	repositories {
@@ -46,7 +46,7 @@ ext {
 }
 
 dependencies {
-	compile('org.springframework.cloud:spring-cloud-stream')
+	compile('org.springframework.cloud:spring-cloud-stream-reactive')
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	compile("org.jetbrains.kotlin:kotlin-reflect")
 	

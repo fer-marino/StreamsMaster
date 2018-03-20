@@ -1,12 +1,15 @@
-package com.serco.dias.dfm.download
+package com.serco.dias.dfm.list
 
-import com.serco.dias.streamsMaster.model.Center
+import com.serco.dias.dfm.model.Center
+import com.serco.dias.dfm.model.Product
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.cloud.stream.messaging.Processor
 import org.springframework.cloud.stream.test.binder.MessageCollector
+import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.support.GenericMessage
 import org.springframework.test.context.junit4.SpringRunner
@@ -17,11 +20,7 @@ import java.util.concurrent.TimeUnit
 class ListApplicationTests {
 
 	@Autowired
-	@Qualifier("list")
-	private lateinit var list: MessageChannel
-	@Autowired
-	@Qualifier("completed")
-	private lateinit var completed: MessageChannel
+	private lateinit var processor: Processor
 
 	@Autowired
 	lateinit var messageCollector: MessageCollector
@@ -29,11 +28,11 @@ class ListApplicationTests {
 	@Test @SuppressWarnings("unchecked")
 	fun testWiring() {
 		val message = GenericMessage(Center())
-		list.send(message)
-		val received = messageCollector.forChannel(completed).poll(2, TimeUnit.MINUTES)
-		println(received)
+		processor.input().send(message)
 
-//        val received = messageCollector.forChannel(download).poll() as Message<String>
+		val received = messageCollector.forChannel(processor.output()).poll() as Message<Product>
+
 		assert(received != null)
 	}
+
 }

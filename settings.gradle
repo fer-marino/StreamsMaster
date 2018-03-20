@@ -1,5 +1,5 @@
 rootProject.name = 'StreamsMaster'
 
 include 'core'
-include 'list'
 include 'download'
+include 'list'
