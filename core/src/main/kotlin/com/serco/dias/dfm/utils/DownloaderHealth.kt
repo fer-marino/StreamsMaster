@@ -1,18 +1,15 @@
-package com.serco.dias.streamsMaster.utils
+package com.serco.dias.dfm.utils
 
-import com.serco.dias.streamsMaster.model.Center
+import com.serco.dias.dfm.model.Center
 import io.micrometer.core.instrument.MeterRegistry
-import io.micrometer.core.instrument.Tags
 import org.apache.commons.io.input.CountingInputStream
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.actuate.health.AbstractHealthIndicator
 import org.springframework.boot.actuate.health.Health
-import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
-import java.time.Duration
 
-@Component
-class StreamsMaster: AbstractHealthIndicator() {
+@Component("Downloader")
+class DownloaderHealth: AbstractHealthIndicator() {
     override fun doHealthCheck(builder: Health.Builder) {
         prevAggregateBandwidth = streamTable.map{ it.byteCount }.sum() - prevAggregateBandwidth
         builder.withDetail("bandwidth", prevAggregateBandwidth)
@@ -22,7 +19,6 @@ class StreamsMaster: AbstractHealthIndicator() {
                 .up()
     }
 
-    @Autowired private lateinit var meterRegistry: MeterRegistry
     private val streamTable = mutableSetOf<CountingInputStream>()
 
     private var prevAggregateBandwidth: Long = 0

@@ -29,15 +29,14 @@ class DownloadApplicationTests {
 	lateinit var messageCollector: MessageCollector
 
 	@Test @SuppressWarnings("unchecked")
-	fun testWiring() {
+	fun testDhus() {
 		val message = GenericMessage(
 				Product("S3A_SR_2_LAN____20180320T064932_20180320T065931_20180320T090109_0599_029_120______SVL_O_NR_003",
-						Date(), config.center, null, null, mapOf("uuid" to "94457d61-7caa-4e98-bfe9-2c8cf74eb137")))
+						Date(), config.center, metadata = mapOf("uuid" to "94457d61-7caa-4e98-bfe9-2c8cf74eb137")))
 		processor.input().send(message)
 
 		val received = messageCollector.forChannel(processor.output()).poll(5, TimeUnit.MINUTES)
 
-		println(received)
 	}
 
 }

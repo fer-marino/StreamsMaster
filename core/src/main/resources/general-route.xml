@@ -18,6 +18,4 @@
     <!-- Do some error handling -->
     <int:transformer input-channel="errorChannel" output-channel="errorLogger" expression="payload.cause.message" />
 
-
-
 </beans>
