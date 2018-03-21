@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.Headers
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
+import java.io.IOException
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.logging.Logger
@@ -43,7 +44,9 @@ class GeneralRoutes {
     }
 
     fun errorHandler(@Payload payload: MessageHandlingException, @Headers headers: MessageHeaders): Product {
-        println(payload.cause?.message)
+        headers["reattempt"] = payload.mostSpecificCause is IOException
+        log.warning(payload.cause?.message)
         return payload.failedMessage!!.payload as Product
     }
+
 }

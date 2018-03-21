@@ -10,13 +10,11 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializer
 import org.springframework.integration.redis.metadata.RedisMetadataStore
 import org.springframework.stereotype.Component
-import java.text.DecimalFormat
 import java.nio.file.Files
 import java.nio.file.Path
 import java.security.MessageDigest
+import java.text.DecimalFormat
 import javax.xml.bind.DatatypeConverter
-
-
 
 
 @Component

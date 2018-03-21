@@ -2,19 +2,16 @@ package com.serco.dias.dfm.modules
 
 import com.serco.dias.dfm.model.Center
 import com.serco.dias.dfm.model.Product
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
-import java.nio.file.Path
-import com.oracle.util.Checksums.update
-import jdk.nashorn.internal.objects.NativeArray.forEach
-import org.springframework.http.*
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.*
-import java.util.Collections.singletonList
-import org.springframework.boot.web.client.RestTemplateBuilder
-import org.springframework.beans.factory.annotation.Autowired
 import reactor.core.publisher.toFlux
-import java.nio.file.Paths
+import java.util.*
 
 
 @Component

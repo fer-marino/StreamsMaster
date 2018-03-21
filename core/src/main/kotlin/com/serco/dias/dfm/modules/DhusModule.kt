@@ -1,10 +1,8 @@
 package com.serco.dias.dfm.modules
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.serco.dias.dfm.config.Config
 import com.serco.dias.dfm.model.Center
 import com.serco.dias.dfm.model.Product
-import com.serco.dias.dfm.utils.DownloaderHealth
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.input.CountingInputStream
 import org.reactivestreams.Publisher
@@ -23,7 +21,6 @@ import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.Callable

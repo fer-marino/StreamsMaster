@@ -1,6 +1,5 @@
 package com.serco.dias.dfm.modules
 
-import com.serco.dias.dfm.config.Config
 import com.serco.dias.dfm.model.Center
 import com.serco.dias.dfm.model.Product
 import com.serco.dias.dfm.utils.SlowInputStream
@@ -9,7 +8,6 @@ import org.apache.commons.io.input.CountingInputStream
 import org.w3c.dom.NodeList
 import java.io.File
 import java.io.IOException
-import java.io.InputStream
 import java.net.URL
 import java.nio.file.FileVisitOption
 import java.nio.file.Files

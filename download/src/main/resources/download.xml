@@ -16,7 +16,8 @@
     <int:chain input-channel="downloadError" output-channel="downloadQueue">
         <int:gateway request-channel="errorLogger" />
         <int:service-activator ref="generalRoutes" method="errorHandler" />
-        <int:delayer id="wait-for-reattempt" default-delay="60000" />
+        <int:header-filter header-names="reattempt"/>
+        <int:delayer id="wait-for-reattempt" default-delay="${streams-master.waitForReattempt:3000000}"/>
         <int:transformer expression="payload.failedMessage.payload" />
         <int:header-enricher>
             <int:header name="lastAttempt" expression="headers.timestamp" />

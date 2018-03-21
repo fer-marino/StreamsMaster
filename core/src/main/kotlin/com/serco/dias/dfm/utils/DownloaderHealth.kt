@@ -1,9 +1,7 @@
 package com.serco.dias.dfm.utils
 
 import com.serco.dias.dfm.model.Center
-import io.micrometer.core.instrument.MeterRegistry
 import org.apache.commons.io.input.CountingInputStream
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.actuate.health.AbstractHealthIndicator
 import org.springframework.boot.actuate.health.Health
 import org.springframework.stereotype.Component

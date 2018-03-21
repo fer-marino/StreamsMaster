@@ -1,20 +1,15 @@
 package com.serco.dias.dfm.modules
 
-import com.serco.dias.dfm.config.Config
 import com.serco.dias.dfm.model.Center
 import com.serco.dias.dfm.model.Product
+import org.apache.commons.io.FileUtils
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
-import java.nio.file.Path
-import org.apache.commons.io.FileUtils
-import org.springframework.beans.factory.annotation.Autowired
 import reactor.core.publisher.toFlux
+import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
-import java.io.IOException
-
-
 
 
 @Component
