@@ -156,7 +156,7 @@ class DhusModule: StreamModule() {
                             skipCount = 0
                         }
 
-                        lastBatch.add(Product(entry.name, Date(), center, metadata = mapOf("uuid" to entry.id, "ingestionDate" to entry.ingestionDate)))
+                        lastBatch.add(Product(entry.name, Date(), center, metadata = mutableMapOf("uuid" to entry.id, "ingestionDate" to entry.ingestionDate)))
 
                         center.options!!["lastIngestionDate"] = entry.ingestionDate.toString()
                     } else

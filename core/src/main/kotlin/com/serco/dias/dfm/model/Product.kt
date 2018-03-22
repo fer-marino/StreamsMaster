@@ -11,7 +11,7 @@ class Product(var name: String = "",
               var downloadStart: Date? = null,
               var downloadStop: Date? = null,
               var size: Long? = null,
-              var metadata: Map<String, Any?>? = null): Serializable {
+              var metadata: MutableMap<String, Any?>? = null) : Serializable {
 
     override fun toString(): String {
         return "Product(name='$name', enqueued=$enqueued, downloadCenter=$downloadCenter, downloadStart=$downloadStart, downloadStop=$downloadStop)"
