@@ -33,8 +33,8 @@ abstract class StreamModule {
         log.info("Validation started for ${product.fileName}")
         val start = System.currentTimeMillis()
         // extract md5 from manifest
-        val md5 = mutableMapOf<String, String>()
-        val size = mutableMapOf<String, Long>()
+        val md5Map = mutableMapOf<String, String>()
+        val sizeMap = mutableMapOf<String, Long>()
 
         val builder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
         val doc = builder.parse(Files.newInputStream(manifest))
@@ -49,19 +49,19 @@ abstract class StreamModule {
             val checkType = xpath.compile("checksum/@checksumName").evaluate(node)
             val s = xpath.compile("@size").evaluate(node).toLong()
             if (checkType.toLowerCase() == "md5")
-                md5[file] = checksum
-            size[file] = s
+                md5Map[file] = checksum
+            sizeMap[file] = s
         }
 
         // validate
         if (validation == Center.ValidationMode.SIZE || validation == Center.ValidationMode.MD5)
-            size.forEach { file, size ->
+            sizeMap.forEach { file, size ->
                 if (Files.size(product.resolve(file)) != size)
                     throw  IOException("Size does not match for file $file")
             }
 
         if (validation == Center.ValidationMode.MD5)
-            md5.forEach { file, md5 ->
+            md5Map.forEach { file, md5 ->
                 if (Utils.md5sum(product.resolve(file)).toLowerCase() != md5)
                     throw IOException("Md5 does not match for file $file")
             }

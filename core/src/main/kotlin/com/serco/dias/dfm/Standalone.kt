@@ -1,4 +1,4 @@
-package com.serco.dias.dfm.standalone
+package com.serco.dias.dfm
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

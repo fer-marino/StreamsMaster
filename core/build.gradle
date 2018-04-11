@@ -29,7 +29,7 @@ apply plugin: 'io.spring.dependency-management'
 jar {
     group = 'com.serco.dias'
     baseName = 'core'
-    version = '0.0.1-SNAPSHOT'
+    version = '0.1'
 }
 
 sourceCompatibility = 1.8
@@ -46,14 +46,8 @@ compileTestKotlin {
     }
 }
 
-ext {
-    springCloudVersion = 'Finchley.M9'
-}
-
-
 repositories {
     mavenCentral()
-    maven { url "https://repo.spring.io/milestone" }
 }
 
 
@@ -82,11 +76,10 @@ dependencies {
 
     // test
     testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+bootJar {
+    launchScript {
+        properties 'logFilename': 'dfm.log'
     }
 }

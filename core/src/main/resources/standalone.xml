@@ -57,7 +57,8 @@
     </int:chain>
 
     <int:inbound-channel-adapter channel="list" ref="generalRoutes" method="list">
-        <int:poller fixed-delay="5" max-messages-per-poll="1" error-channel="logger" time-unit="SECONDS"/>
+        <int:poller fixed-delay="${streams-master.listInterval:60}" max-messages-per-poll="1" error-channel="logger"
+                    time-unit="SECONDS"/>
     </int:inbound-channel-adapter>
 
 </beans>
