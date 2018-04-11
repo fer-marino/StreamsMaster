@@ -53,24 +53,42 @@ class FtpModule : StreamModule() {
     private class FtpListSupplier(var center: Center) : Callable<Iterator<Product>> {
 
         override fun call(): Iterator<Product> {
-            val f = FTPClient()
+
             try {
-                f.connect(center.address, center.options!!["port"].toString().toInt())
-                if (center.options!!["passiveMode"]!!.toBoolean())
-                    f.enterLocalPassiveMode()
-                val username = center.options!!["username"].toString()
-                val password = center.options!!["password"].toString()
-                f.login(username, password)
-                f.changeWorkingDirectory("/${center.options!!["baseDir"]}")
+
 
                 return object : Iterator<Product> {
-                    val queue = f.listNames().toMutableList()
+                    var started = false
+                    val f = FTPClient()
+                    fun init() {
+                        f.connect(center.address, center.options!!["port"].toString().toInt())
+                        if (center.options!!["passiveMode"]!!.toBoolean())
+                            f.enterLocalPassiveMode()
+                        val username = center.options!!["username"].toString()
+                        val password = center.options!!["password"].toString()
+                        f.login(username, password)
+                        f.changeWorkingDirectory("/${center.options!!["baseDir"]}")
 
-                    override fun hasNext(): Boolean = queue.isNotEmpty()
+                        queue.addAll(f.listNames().toMutableList())
+                    }
+
+                    val queue = mutableListOf<String>()
+
+                    override fun hasNext(): Boolean {
+                        if (!started) init()
+                        return if (queue.isNotEmpty()) {
+                            true
+                        } else {
+                            f.logout()
+                            false
+                        }
+                    }
 
                     override fun next(): Product = next("/${center.options!!["baseDir"]}")
 
                     private fun next(baseDir: String): Product {
+                        if (!started) init()
+
                         if (queue.isEmpty()) throw NoSuchElementException("No more products")
 
                         var dept = -1
@@ -92,8 +110,6 @@ class FtpModule : StreamModule() {
 
             } catch (e: IOException) {
                 throw IOException("Error occurred during product list for center ${center.name}: ${e.message}", e)
-            } finally {
-                f.logout()
             }
         }
 

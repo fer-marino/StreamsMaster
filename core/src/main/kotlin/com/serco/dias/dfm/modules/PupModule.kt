@@ -13,13 +13,13 @@ import java.util.*
 
 
 @Component
-class PupModule: StreamModule() {
+class PupModule : StreamModule() {
 
     override fun list(center: Center): Flux<Product> =
-         Files.walk(Paths.get(center.address), 1)
-                .filter({ f -> Files.isDirectory(f) && f != Paths.get(center.address) && !f.fileName.startsWith(".") })
-                .map { Product(it.fileName.toString(), Date(), center, size = FileUtils.sizeOfDirectory(it.toFile())) }
-                .toFlux()
+            Files.walk(Paths.get(center.address), 1)
+                    .filter({ f -> Files.isDirectory(f) && f != Paths.get(center.address) && !f.fileName.startsWith(".") })
+                    .map { Product(it.fileName.toString(), Date(), center, size = FileUtils.sizeOfDirectory(it.toFile())) }
+                    .toFlux()
 
     override fun download(product: Product): Product {
         val source = Paths.get(product.downloadCenter.address, product.name)

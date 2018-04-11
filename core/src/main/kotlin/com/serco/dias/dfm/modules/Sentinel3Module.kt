@@ -19,7 +19,7 @@ import javax.xml.xpath.XPathFactory
 
 
 @Component
-class Sentinel3Module: NGeoModule() {
+class Sentinel3Module : NGeoModule() {
 
     override fun list(center: Center): Flux<Product> {
         val f = FTPClient()
@@ -80,11 +80,11 @@ class Sentinel3Module: NGeoModule() {
     private fun slstrL1QualityRank(manifest: Document): Double {
         val xPathfactory = XPathFactory.newInstance()
         val xpath = xPathfactory.newXPath()
-        val missing =  xpath.compile("/XFDU/metadataSection/metadataObject/metadataWrap/xmlData" +
+        val missing = xpath.compile("/XFDU/metadataSection/metadataObject/metadataWrap/xmlData" +
                 "/slstrProductInformation/missingElements/globalInfo").evaluate(manifest, XPathConstants.NODESET) as NodeList
 
         var max = 0.0
-        for(i in 0 until missing.length) {
+        for (i in 0 until missing.length) {
             val c = missing.item(i)
 
             val current = xpath.compile("@percentage").evaluate(c).toDouble()
@@ -92,7 +92,7 @@ class Sentinel3Module: NGeoModule() {
         }
 
         return max
-}
+    }
 
     private inner class QualityInvalidException(s: String) : Throwable(s)
 

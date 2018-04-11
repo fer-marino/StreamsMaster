@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@ConfigurationProperties(prefix="streams-master")
+@ConfigurationProperties(prefix = "streams-master")
 class Config {
     var listInterval: Int = 60000
     var productPerPoll: Int = 100

@@ -1,5 +1,6 @@
-rootProject.name = 'StreamsMaster'
+rootProject.name = 'dfm'
 
 include 'core'
 include 'download'
 include 'list'
+include 'standalone'

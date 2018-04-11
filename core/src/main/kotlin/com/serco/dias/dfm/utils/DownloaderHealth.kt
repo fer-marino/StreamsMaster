@@ -7,9 +7,9 @@ import org.springframework.boot.actuate.health.Health
 import org.springframework.stereotype.Component
 
 @Component("Downloader")
-class DownloaderHealth: AbstractHealthIndicator() {
+class DownloaderHealth : AbstractHealthIndicator() {
     override fun doHealthCheck(builder: Health.Builder) {
-        prevAggregateBandwidth = streamTable.map{ it.byteCount }.sum() - prevAggregateBandwidth
+        prevAggregateBandwidth = streamTable.map { it.byteCount }.sum() - prevAggregateBandwidth
         builder.withDetail("bandwidth", prevAggregateBandwidth)
                 .withDetail("active-downloads", streamTable.size)
                 .withDetail("completed-downloads", completedDownloads)

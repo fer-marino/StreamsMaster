@@ -1,18 +1,18 @@
 buildscript {
-	ext {
-		kotlinVersion = '1.2.30'
-		springBootVersion = '2.0.0.RELEASE'
-	}
-	repositories {
-		mavenCentral()
+    ext {
+        kotlinVersion = '1.2.30'
+        springBootVersion = '2.0.1.RELEASE'
+    }
+    repositories {
+        mavenCentral()
         maven { url 'http://repo.spring.io/plugins-release' }
-	}
-	dependencies {
-		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
-		classpath "org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}"
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}"
         classpath 'io.spring.gradle:propdeps-plugin:0.0.9.RELEASE'
-	}
+    }
 }
 
 apply plugin: 'kotlin'
@@ -27,42 +27,41 @@ apply plugin: 'io.spring.dependency-management'
 
 
 jar {
-	group = 'com.serco.dias'
-	baseName = 'core'
-	version = '0.0.1-SNAPSHOT'
+    group = 'com.serco.dias'
+    baseName = 'core'
+    version = '0.0.1-SNAPSHOT'
 }
 
 sourceCompatibility = 1.8
 compileKotlin {
-	kotlinOptions {
-		freeCompilerArgs = ["-Xjsr305=strict"]
-		jvmTarget = "1.8"
-	}
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
 }
 compileTestKotlin {
-	kotlinOptions {
-		freeCompilerArgs = ["-Xjsr305=strict"]
-		jvmTarget = "1.8"
-	}
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
 }
 
 ext {
-	springCloudVersion = 'Finchley.M8'
+    springCloudVersion = 'Finchley.M9'
 }
 
 
 repositories {
-	mavenCentral()
+    mavenCentral()
     maven { url "https://repo.spring.io/milestone" }
 }
 
 
 dependencies {
-	// Spring
-	compile 'org.springframework.boot:spring-boot-starter-actuator'
-	compile 'org.springframework.boot:spring-boot-starter-data-redis'
-    compile 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
-	compile 'org.springframework.cloud:spring-cloud-stream'
+    // Spring
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-data-redis'
+    compile 'org.springframework.boot:spring-boot-starter-integration'
 
     compile 'org.springframework.integration:spring-integration-redis'
     compile 'org.springframework.integration:spring-integration-ftp'
@@ -72,22 +71,22 @@ dependencies {
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     optional "org.springframework.boot:spring-boot-configuration-processor"
 
-	// kotlin
-	compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-	compile "org.jetbrains.kotlin:kotlin-reflect"
+    // kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "org.jetbrains.kotlin:kotlin-reflect"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin"
 
     // utils
     compile 'commons-io:commons-io:2.6'
-	compile 'it.ozimov:embedded-redis:0.7.0'
+    compile 'it.ozimov:embedded-redis:0.7.0'
 
-	// test
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
+    // test
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
 }
 
 dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }

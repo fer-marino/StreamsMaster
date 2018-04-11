@@ -14,16 +14,18 @@ import org.springframework.cloud.stream.reactive.StreamEmitter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.ImportResource
-import org.springframework.integration.annotation.BridgeFrom
 import org.springframework.integration.dsl.IntegrationFlows
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.support.GenericMessage
 
-@SpringBootApplication @EnableBinding(Processor::class) @ImportResource("classpath:general-route.xml", "classpath:list.xml")
+@SpringBootApplication
+@EnableBinding(Processor::class)
+@ImportResource("classpath:general-route.xml", "classpath:list.xml")
 @ComponentScan(basePackages = ["com.serco.dias.dfm"])
 class ListApplication {
-    @Autowired @Qualifier("list")
+    @Autowired
+    @Qualifier("list")
     lateinit var listChannel: MessageChannel
 
     @StreamListener(Processor.INPUT)
@@ -31,7 +33,9 @@ class ListApplication {
         listChannel.send(GenericMessage(m))
     }
 
-    @StreamEmitter @Output(Processor.OUTPUT) @Bean
+    @StreamEmitter
+    @Output(Processor.OUTPUT)
+    @Bean
     fun forwardOutput(): Publisher<Message<Product>> = IntegrationFlows.from("listResult").bridge().toReactivePublisher<Product>()
 
 }

@@ -25,7 +25,8 @@ class SlowInputStream
     override fun read(): Int {
         try {
             Thread.sleep(1000)
-        } catch (e: InterruptedException) { /* ignore */ }
+        } catch (e: InterruptedException) { /* ignore */
+        }
 
         return `in`.read()
     }
@@ -43,7 +44,8 @@ class SlowInputStream
                 val milli = diff / 1000000
                 val nano = (diff % 1000000).toInt()
                 Thread.sleep(milli, nano)
-            } catch (e: InterruptedException) { /* ignore */ }
+            } catch (e: InterruptedException) { /* ignore */
+            }
 
         return out
     }

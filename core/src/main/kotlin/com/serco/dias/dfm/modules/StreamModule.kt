@@ -19,8 +19,10 @@ import javax.xml.xpath.XPathFactory
 
 abstract class StreamModule {
     val log get() = Logger.getLogger(this.javaClass.canonicalName)!!
-    @Autowired protected lateinit var config: Config
-    @Autowired lateinit var meterUtils: DownloaderHealth
+    @Autowired
+    protected lateinit var config: Config
+    @Autowired
+    lateinit var meterUtils: DownloaderHealth
 
     abstract fun list(center: Center): Flux<Product>
     abstract fun download(product: Product): Product

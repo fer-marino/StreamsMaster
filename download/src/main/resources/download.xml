@@ -5,35 +5,35 @@
        xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <task:executor id="downloader" pool-size="${streams-master.parallelDownloads:2}" rejection-policy="CALLER_RUNS" />
+    <task:executor id="downloader" pool-size="${streams-master.parallelDownloads:2}" rejection-policy="CALLER_RUNS"/>
 
     <int:channel id="downloadQueue" datatype="com.serco.dias.dfm.model.Product">
-        <int:dispatcher task-executor="downloader" />
+        <int:dispatcher task-executor="downloader"/>
     </int:channel>
 
-    <int:channel id="completed" />
+    <int:channel id="completed"/>
 
     <int:chain input-channel="downloadError" output-channel="downloadQueue">
-        <int:gateway request-channel="errorLogger" />
-        <int:service-activator ref="generalRoutes" method="errorHandler" />
+        <int:gateway request-channel="errorLogger"/>
+        <int:service-activator ref="generalRoutes" method="errorHandler"/>
         <int:header-filter header-names="reattempt"/>
         <int:delayer id="wait-for-reattempt" default-delay="${streams-master.waitForReattempt:3000000}"/>
-        <int:transformer expression="payload.failedMessage.payload" />
+        <int:transformer expression="payload.failedMessage.payload"/>
         <int:header-enricher>
-            <int:header name="lastAttempt" expression="headers.timestamp" />
-            <int:header name="errorMessage" expression="payload.cause.message" />
+            <int:header name="lastAttempt" expression="headers.timestamp"/>
+            <int:header name="errorMessage" expression="payload.cause.message"/>
         </int:header-enricher>
-        <int:service-activator ref="generalRoutes" method="errorHandler" />
+        <int:service-activator ref="generalRoutes" method="errorHandler"/>
     </int:chain>
 
     <!-- list route -->
     <int:chain id="downloadChain" input-channel="downloadQueue" output-channel="completed">
         <int:header-enricher>
-            <int:error-channel  ref="downloadError"/>
+            <int:error-channel ref="downloadError"/>
         </int:header-enricher>
 
         <int:service-activator expression="@generalRoutes.download(payload)" requires-reply="true" async="true"/>
-        <int:service-activator expression="@generalRoutes.finalize(payload)" requires-reply="true" />
+        <int:service-activator expression="@generalRoutes.finalize(payload)" requires-reply="true"/>
     </int:chain>
 
 </beans>

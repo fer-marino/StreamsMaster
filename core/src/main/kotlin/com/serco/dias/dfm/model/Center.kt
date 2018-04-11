@@ -2,7 +2,7 @@ package com.serco.dias.dfm.model
 
 import java.io.Serializable
 
-class Center: Serializable {
+class Center : Serializable {
     var id: String = ""
     var name: String = ""
     var type: String = ""

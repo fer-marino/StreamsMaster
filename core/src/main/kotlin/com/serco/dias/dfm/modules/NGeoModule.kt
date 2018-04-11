@@ -18,7 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
 
-abstract class NGeoModule: StreamModule() {
+abstract class NGeoModule : StreamModule() {
     override fun download(product: Product): Product {
         product.downloadStart = Date()
         val center = product.downloadCenter
@@ -73,11 +73,11 @@ abstract class NGeoModule: StreamModule() {
 
             if (tdac) connection.setRequestProperty("Authorization", basicAuth)
 
-            val input = CountingInputStream( if (config.bandwidth > 0)
+            val input = CountingInputStream(if (config.bandwidth > 0)
                 SlowInputStream(connection.getInputStream(), config.bandwidth / config.parallelDownloads)
             else
-                connection.getInputStream() )
-            meterUtils.monitorDownload(input, center, { FileUtils.copyInputStreamToFile(input, destination) } )
+                connection.getInputStream())
+            meterUtils.monitorDownload(input, center, { FileUtils.copyInputStreamToFile(input, destination) })
         }
 
         // quality validation
@@ -95,7 +95,7 @@ abstract class NGeoModule: StreamModule() {
             else -> throw IllegalArgumentException("Manifest is missing")
         }
 
-        product.size =  FileUtils.sizeOfDirectory(File(config.tmpDir + File.separator + product.name))
+        product.size = FileUtils.sizeOfDirectory(File(config.tmpDir + File.separator + product.name))
 
         if (center.destination.isNotBlank()) {
             val dest = Paths.get(center.destination, product.name)

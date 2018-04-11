@@ -19,9 +19,12 @@ import java.util.logging.Logger
 @Component
 class GeneralRoutes {
     val log get() = Logger.getLogger(this.javaClass.canonicalName)!!
-    @Autowired private lateinit var modules: Map<String, StreamModule>
-    @Autowired private lateinit var metadataStore: RedisMetadataStore
-    @Autowired private lateinit var config: Config
+    @Autowired
+    private lateinit var modules: Map<String, StreamModule>
+    @Autowired
+    private lateinit var metadataStore: RedisMetadataStore
+    @Autowired
+    private lateinit var config: Config
 
     fun list(): Flux<Product> = modules[config.center.type + "Module"]!!.list(config.center)
 
@@ -38,7 +41,7 @@ class GeneralRoutes {
         return payload
     }
 
-//    @Scheduled(fixedDelay = 6000000)
+    //    @Scheduled(fixedDelay = 6000000)
     fun metadataReaper() {
         TODO("Implement cron that delete older metadata from redis")
     }

@@ -15,11 +15,15 @@ import java.util.*
 
 
 @Component
-class Sentinel1Module: NGeoModule() {
-    @Autowired private lateinit var restBuilder: RestTemplateBuilder
+class Sentinel1Module : NGeoModule() {
+    @Autowired
+    private lateinit var restBuilder: RestTemplateBuilder
 
     override fun list(center: Center): Flux<Product> {
-        val restTemplate = restBuilder.basicAuthorization(center.options!!["username"], center.options!!["password"]).build()
+        val restTemplate = restBuilder.basicAuthorization(center.options!!["username"], center.options!!["password"])
+                .setConnectTimeout(center.options!!["connectionTimeout"]!!.toInt())
+                .setReadTimeout(center.options!!["readTimeout"]!!.toInt())
+                .build()
         val tdacListUrl = "/tdac/service/products"
         val headers = HttpHeaders().apply {
             accept = Collections.singletonList(MediaType.APPLICATION_JSON)
