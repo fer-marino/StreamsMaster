@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ConfigurationProperties(prefix = "streams-master")
 class Config {
+    var instanceName: String = "Data Flow Manager - Development"
     var listInterval: Int = 60000
     var productPerPoll: Int = 100
     var tmpDir: String = System.getProperty("java.io.tmpdir")
@@ -15,5 +16,5 @@ class Config {
     var bandwidth: Int = -1
     var waitForReattemp: Int = 1800000
     @NestedConfigurationProperty
-    var center: Center = Center()
+    var center: List<Center> = mutableListOf()
 }

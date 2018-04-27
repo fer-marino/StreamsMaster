@@ -13,6 +13,7 @@ class Center : Serializable {
     var validation: ValidationMode = ValidationMode.MD5
     var skipManifestCheck: String = "-"
     var options: MutableMap<String, String>? = null
+    var lta: Lta? = null
 
     enum class ValidationMode {
         NONE, SIZE, MD5

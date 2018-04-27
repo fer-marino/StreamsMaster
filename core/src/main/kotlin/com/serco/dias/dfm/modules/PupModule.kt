@@ -13,7 +13,7 @@ import java.util.*
 
 
 @Component
-class PupModule : StreamModule() {
+class PupModule : AbstractModule() {
 
     override fun list(center: Center): Flux<Product> =
             Files.walk(Paths.get(center.address), 1)

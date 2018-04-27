@@ -1,8 +1,10 @@
-package com.serco.dias.dfm.modules
+package com.serco.dias.dfm
 
-import com.serco.dias.dfm.config.Config
+import com.serco.dias.dfm.model.Center
 import com.serco.dias.dfm.model.Product
+import com.serco.dias.dfm.modules.AbstractModule
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.redis.serializer.RedisSerializer
 import org.springframework.integration.redis.metadata.RedisMetadataStore
 import org.springframework.messaging.MessageHandlingException
 import org.springframework.messaging.MessageHeaders
@@ -11,8 +13,6 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 import java.io.IOException
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.logging.Logger
 
 
@@ -20,13 +20,13 @@ import java.util.logging.Logger
 class GeneralRoutes {
     val log get() = Logger.getLogger(this.javaClass.canonicalName)!!
     @Autowired
-    private lateinit var modules: Map<String, StreamModule>
+    private lateinit var modules: Map<String, AbstractModule>
     @Autowired
     private lateinit var metadataStore: RedisMetadataStore
     @Autowired
-    private lateinit var config: Config
+    private lateinit var redisSerializer: RedisSerializer<Product>
 
-    fun list(): Flux<Product> = modules[config.center.type + "Module"]!!.list(config.center)
+    fun list(center: Center): Flux<Product> = modules[center.type + "Module"]!!.list(center)
 
     fun download(product: Product) {
         log.info("Download started for ${product.name}")
@@ -37,12 +37,13 @@ class GeneralRoutes {
     fun finalize(product: Product): Product = modules[product.downloadCenter.type + "Module"]!!.finalize(product)
 
     fun storeRedis(payload: Product, headers: MessageHeaders): Product {
-        metadataStore.put(payload.name, LocalDateTime.now().plusDays(60).toEpochSecond(ZoneOffset.UTC).toString())
+        metadataStore.put(payload.name, redisSerializer.serialize(payload).toString())
         return payload
     }
 
     //    @Scheduled(fixedDelay = 6000000)
     fun metadataReaper() {
+
         TODO("Implement cron that delete older metadata from redis")
     }
 

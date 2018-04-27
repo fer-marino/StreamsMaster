@@ -16,7 +16,7 @@ import java.util.*
 import java.util.concurrent.Callable
 
 @Component
-class FtpModule : StreamModule() {
+class FtpModule : AbstractModule() {
     override fun list(center: Center): Flux<Product> =
             Flux.using(FtpListSupplier(center), FtpListSourceSupplier(), FtpSupplierCleanup())
 

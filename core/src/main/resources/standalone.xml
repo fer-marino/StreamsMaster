@@ -11,21 +11,15 @@
 
     <task:executor id="downloader" pool-size="${streams-master.parallelDownloads:2}" rejection-policy="CALLER_RUNS"/>
 
-    <int:logging-channel-adapter id="logger" logger-name="streams-master"/>
-    <int:logging-channel-adapter id="errorLogger" logger-name="Download-Errors" level="ERROR"
-                                 expression="payload.cause.message"/>
-
     <bean id="redisMessageStore" class="org.springframework.integration.redis.store.RedisMessageStore">
         <constructor-arg ref="redisConnectionFactory"/>
         <property name="valueSerializer" ref="redisSerializer"/>
     </bean>
 
     <int:channel id="downloadQueue" datatype="com.serco.dias.dfm.model.Product">
-        <int:dispatcher task-executor="downloader"/>
+        <int:queue message-store="redisMessageStore"/>
+        <!--<int:dispatcher task-executor="downloader"/>-->
     </int:channel>
-
-    <!-- Do some error handling -->
-    <int:transformer input-channel="errorChannel" output-channel="errorLogger" expression="payload.cause.message"/>
 
     <int:chain input-channel="downloadError" output-channel="downloadQueue">
         <int:gateway request-channel="errorLogger"/>
@@ -50,13 +44,14 @@
     </int:chain>
 
     <int:chain id="listChain" input-channel="list" output-channel="downloadQueue">
+        <int:service-activator ref="generalRoutes" method="list" requires-reply="true"/>
         <int:splitter/>
         <int:filter expression="payload.name matches payload.downloadCenter.filter"/>
         <int:filter expression="@metadataStore.get(payload.name) == null"/>
         <int:service-activator ref="generalRoutes" method="storeRedis"/>
     </int:chain>
 
-    <int:inbound-channel-adapter channel="list" ref="generalRoutes" method="list">
+    <int:inbound-channel-adapter channel="list" expression="@config.center">
         <int:poller fixed-delay="${streams-master.listInterval:60}" max-messages-per-poll="1" error-channel="logger"
                     time-unit="SECONDS"/>
     </int:inbound-channel-adapter>

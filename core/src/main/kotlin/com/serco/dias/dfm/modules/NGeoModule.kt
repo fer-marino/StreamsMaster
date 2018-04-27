@@ -18,7 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
 
-abstract class NGeoModule : StreamModule() {
+abstract class NGeoModule : AbstractModule() {
     override fun download(product: Product): Product {
         product.downloadStart = Date()
         val center = product.downloadCenter
@@ -42,7 +42,7 @@ abstract class NGeoModule : StreamModule() {
         val responseCode = xPathfactory.newXPath().compile("/ProductDownloadResponse/ResponseCode/text()").evaluate(doc, XPathConstants.NODESET) as NodeList
 
         if (responseCode.length > 0) {
-            // lta forwarded request
+            // center forwarded request
             val code = responseCode.item(0).textContent
             throw IOException("Product rolled from ODA. Will be fetched from LTA. Response code $code")
         }

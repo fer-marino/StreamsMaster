@@ -7,14 +7,21 @@ streams-master:
   productPerPoll: 100
   parallelDownloads: 2
   center:
-    id: scihub
-    name: scihub
-    type: dhus
-    address: https://scihub.copernicus.eu/apihub
-    destination: E:/test/tmp
-    filter: .*
-    options:
-      username: test
-      password: test
-      filter: substringof('SR_2_LAN',Name)
-      orderBy: IngestionDate desc
+    - id: scihub
+      name: scihub
+      type: dhus
+      address: https://scihub.copernicus.eu/apihub
+      destination: E:/test/tmp
+      filter: .*
+      options:
+        username: test
+        password: test
+        filter: substringof('SR_2_LAN',Name)
+        orderBy: IngestionDate desc
+    - name: PAC1
+      type: sentinel1
+      address: 131.30
+      destination: /data/
+      options:
+        username: user
+        password: pass

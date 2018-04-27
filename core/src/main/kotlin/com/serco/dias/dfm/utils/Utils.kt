@@ -51,7 +51,7 @@ class Utils {
     }
 
     @Bean(name = ["redisProductSerializer"])
-    fun getRedisProductMessageStore(): RedisSerializer<Product> = Jackson2JsonRedisSerializer<Product>(Product::class.java)
+    fun getRedisProductMessageStore(@Autowired om: ObjectMapper): RedisSerializer<Product> = Jackson2JsonRedisSerializer<Product>(Product::class.java).apply { setObjectMapper(om) }
 
     @Bean(name = ["redisSerializer"])
     fun getRedisMessageSerializer(@Autowired objectMapper: ObjectMapper) = GenericJackson2JsonRedisSerializer(objectMapper)

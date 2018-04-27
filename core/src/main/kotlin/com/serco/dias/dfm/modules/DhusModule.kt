@@ -32,7 +32,7 @@ import java.util.logging.Logger
 import java.util.zip.ZipInputStream
 
 @Component
-class DhusModule : StreamModule() {
+class DhusModule : AbstractModule() {
     @Autowired
     lateinit var restTemplateBuilder: RestTemplateBuilder
 
