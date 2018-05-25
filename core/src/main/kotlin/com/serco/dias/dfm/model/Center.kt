@@ -8,7 +8,7 @@ class Center : Serializable {
     var type: String = ""
     var address: String = ""
     var destination: String = ""
-    var filter: String? = ""
+    var filter: String? = ".*"
     var noDataFilter: String = "-"
     var validation: ValidationMode = ValidationMode.MD5
     var skipManifestCheck: String = "-"

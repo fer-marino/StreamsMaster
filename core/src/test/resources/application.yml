@@ -25,3 +25,6 @@ streams-master:
       options:
         username: user
         password: pass
+spring:
+  profiles:
+    active: embeddedRedis

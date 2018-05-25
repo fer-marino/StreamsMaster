@@ -27,7 +27,7 @@ abstract class NGeoModule : AbstractModule() {
         var address = center.options!!["address"].toString()
 
         val db = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-        val tdac = product.downloadCenter.type == "Sentinel1"
+        val tdac = product.downloadCenter.type.toLowerCase() == "sentinel1"
         // start of ngeo interface
         // fetch metalink
         val basicAuth = "Basic " + String(org.apache.commons.net.util.Base64.encodeBase64(("$username:$password").toByteArray()))

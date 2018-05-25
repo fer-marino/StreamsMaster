@@ -28,9 +28,7 @@ class ListApplicationTests {
         val message = GenericMessage(Center())
         processor.input().send(message)
 
-        val received = messageCollector.forChannel(processor.output()).poll() as Message<Product>
-
-        assert(received != null)
+        (messageCollector.forChannel(processor.output()).poll() as Message<Product>)
     }
 
 }

@@ -26,11 +26,11 @@ class GeneralRoutes {
     @Autowired
     private lateinit var redisSerializer: RedisSerializer<Product>
 
-    fun list(center: Center): Flux<Product> = modules[center.type + "Module"]!!.list(center)
+    fun list(center: Center): Flux<Product> = modules[center.type.toLowerCase() + "Module"]!!.list(center)
 
     fun download(product: Product) {
         log.info("Download started for ${product.name}")
-        modules[product.downloadCenter.type + "Module"]!!.download(product)
+        modules[product.downloadCenter.type.toLowerCase() + "Module"]!!.download(product)
         log.info("Download complete for ${product.name} in ${product.downloadStop!!.time - product.downloadStart!!.time} msec")
     }
 
@@ -43,12 +43,13 @@ class GeneralRoutes {
 
     //    @Scheduled(fixedDelay = 6000000)
     fun metadataReaper() {
-
         TODO("Implement cron that delete older metadata from redis")
     }
 
     fun errorHandler(@Payload payload: MessageHandlingException, @Headers headers: MessageHeaders): Product {
         headers["reattempt"] = payload.mostSpecificCause is IOException
+        payload.printStackTrace()
+        log.warning(payload.message)
         log.warning(payload.cause?.message)
         return payload.failedMessage!!.payload as Product
     }

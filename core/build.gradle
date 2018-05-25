@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '1.2.30'
+        kotlinVersion = '1.2.41'
         springBootVersion = '2.0.1.RELEASE'
     }
     repositories {
@@ -56,11 +56,12 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-data-redis'
     compile 'org.springframework.boot:spring-boot-starter-integration'
+    compile 'org.springframework.boot:spring-boot-starter-web'
 
     compile 'org.springframework.integration:spring-integration-redis'
     compile 'org.springframework.integration:spring-integration-ftp'
     compile 'org.springframework.integration:spring-integration-groovy'
-    compile 'org.springframework:spring-web'
+//    compile 'org.springframework:spring-web'
 
     kapt "org.springframework.boot:spring-boot-configuration-processor"
     optional "org.springframework.boot:spring-boot-configuration-processor"

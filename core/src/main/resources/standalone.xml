@@ -11,19 +11,14 @@
 
     <task:executor id="downloader" pool-size="${streams-master.parallelDownloads:2}" rejection-policy="CALLER_RUNS"/>
 
-    <bean id="redisMessageStore" class="org.springframework.integration.redis.store.RedisMessageStore">
-        <constructor-arg ref="redisConnectionFactory"/>
-        <property name="valueSerializer" ref="redisSerializer"/>
-    </bean>
-
     <int:channel id="downloadQueue" datatype="com.serco.dias.dfm.model.Product">
-        <int:queue message-store="redisMessageStore"/>
-        <!--<int:dispatcher task-executor="downloader"/>-->
+        <!--<int:queue message-store="redisMessageStore"/>-->
+        <int:dispatcher task-executor="downloader"/>
     </int:channel>
 
     <int:chain input-channel="downloadError" output-channel="downloadQueue">
-        <int:gateway request-channel="errorLogger"/>
         <int:service-activator ref="generalRoutes" method="errorHandler"/>
+        <int:gateway request-channel="errorLogger"/>
         <int:delayer id="wait-for-reattempt" default-delay="60000"/>
         <int:transformer expression="payload.failedMessage.payload"/>
         <int:header-enricher>
@@ -44,11 +39,10 @@
     </int:chain>
 
     <int:chain id="listChain" input-channel="list" output-channel="downloadQueue">
+        <int:splitter/>
         <int:service-activator ref="generalRoutes" method="list" requires-reply="true"/>
         <int:splitter/>
         <int:filter expression="payload.name matches payload.downloadCenter.filter"/>
-        <int:filter expression="@metadataStore.get(payload.name) == null"/>
-        <int:service-activator ref="generalRoutes" method="storeRedis"/>
     </int:chain>
 
     <int:inbound-channel-adapter channel="list" expression="@config.center">

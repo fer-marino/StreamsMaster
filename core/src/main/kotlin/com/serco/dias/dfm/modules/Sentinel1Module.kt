@@ -32,6 +32,7 @@ class Sentinel1Module : NGeoModule() {
         val ris = restTemplate.exchange("http://" + center.address + tdacListUrl, HttpMethod.GET, entity, Map::class.java)
         val products = ris.body!!["products"] as List<Map<String, Any>>
         log.info("Found ${products.size} new products from ${center.name}")
+        // fixme populate options
         return products.map { Product(it["product_name"].toString(), Date(), center) }.toFlux()
     }
 
